@@ -13,8 +13,14 @@ say join(',',split(/\D+/, "1 2 333"));
 
 my @anotherArray = (1, 2, 3, 4, 5);
 
+say $anotherArray[-1] . "--";
+
 print "Third way: ";
 
+push @anotherArray, 6;
+
 while (@anotherArray) {
-    print pop @anotherArray;
+    my $xx = pop @anotherArray;
+    print $xx;
+#    last if $xx % 2 == 0;
 }

@@ -4,7 +4,9 @@ use warnings;
 use Test::More;
 use feature 'say';
 
-require("evalRpn.pl");
+use FindBin;
+
+require "$FindBin::Bin/./evalRpn.pl";
 
 my @x = tokenize("1+22+333");
 my @y = ('1','22','333');
@@ -15,5 +17,8 @@ is( @x, @y, 'OK');
 @x = tokenize("1+22");
 @y = ('1','22');
 is( @x, @y, 'OK');
+
+my @yy = toRpn("6 - 8 - 7");
+say join(',', @yy);
 
 done_testing();

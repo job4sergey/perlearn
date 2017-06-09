@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+
 use strict;
 use warnings FATAL => 'all';
 
@@ -11,8 +12,52 @@ $oper2Priority{"+"} = 0;
 sub tokenize
 {
     my ($s) = @_;
-
-    split(/\D+/, $s);
+    
+    my $state = 0; # ready
+    my $current = "";
+    my @tokens;
+    
+    for ( my $key = 0 ; $key < length($s) ; $key++ ) {
+    	my $c = substr( $s, $key, 1 );
+    	if ($c =~ /\s/) 
+    	{
+    		next;    		
+    	}
+    	
+    	if ($state == 0) 
+    	{
+    		if ($c =~ /\d/) 
+	    	{
+	    		$state = 1;
+	    		$current = $current.$c;
+	    	}
+	    	else 
+	    	{
+	    		push @tokens, $c;
+	    	}
+    	}
+    	else 
+    	{
+    		if (!($c =~ /\d/))
+    		{
+    			$state = 0;
+    			push @tokens, $current;
+    			$current = "";
+    			push @tokens, $c;
+    		}
+    		else 
+    		{
+    			$current = $current.$c;
+    		}
+    	}
+	}
+	
+	if ($state == 1) 
+	{
+		push @tokens, $current;
+	}
+	
+	@tokens;
 };
 
 sub compareOpers
@@ -64,7 +109,7 @@ sub toRpn
             my $isPopped = 0;
             while (@opers)
             {
-                my $oper = $opers[-1];
+                my $oper = pop @opers;
                 if ("(" eq $oper)
                 {
                     $isPopped = 1;
@@ -74,11 +119,10 @@ sub toRpn
                 {
                     push @tokenzRpn, $oper;
                 }
-
-                if (!$isPopped)
-                {
-                    die "Syntax err";
-                }
+            }
+            if (!$isPopped)
+            {
+                die "Syntax err";
             }
         }
         else
@@ -98,6 +142,66 @@ sub toRpn
     @tokenzRpn;
 }
 
-print toRpn("6 - 8 - 7");
+sub evalRPN
+{
+	my (@tokens) = @_;
+	my @rpn;
+	
+	foreach my $t (@tokens)
+	{
+		if (exists($oper2Priority{$t}))
+        {
+        	push @rpn, $t;
+        }
+        else
+        {
+        	push @rpn, 0+$t;
+        }
+	};
 
-1;
+    while ($#rpn > 1)
+    {
+        my $j = 0;
+        for my $i (0 .. $#rpn)
+        {
+            my $o = $rpn[$i];
+            if (!($o =~ /\d+/))
+            {
+            	$j = $i;
+                last;
+            }
+        }
+
+        my $op = (splice @rpn, $j, 1)[0];
+        my $operand2 = (splice @rpn, $j-1, 1)[0];
+        my $operand1 = (splice @rpn, $j-2, 1)[0];
+
+        my $result = 0;
+        if ($op =~ /[+]/)
+        {
+            $result = $operand1 + $operand2;
+        }
+        elsif ($op =~ /[-]/)
+        {
+            $result = $operand1 - $operand2;
+        }
+        elsif ($op =~ /[*]/)
+        {
+            $result = $operand1 * $operand2;
+        }
+        elsif ($op =~ /\//)
+        {
+            $result = $operand1 / $operand2;
+        }
+
+        splice @rpn, $j-2, 0, $result;
+    }
+
+    $rpn[0];
+}
+
+#print evalRPN(toRpn("(2+3) *4"));
+
+print evalRPN(toRpn($ARGV[0])), "\n";
+
+#1;

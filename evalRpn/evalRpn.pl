@@ -177,19 +177,19 @@ sub evalRPN
         my $operand1 = (splice @rpn, $j-2, 1)[0];
 
         my $result = 0;
-        if ($op =~ /[+]/)
+        if ($op eq '+')
         {
             $result = $operand1 + $operand2;
         }
-        elsif ($op =~ /[-]/)
+        elsif ($op eq '-')
         {
             $result = $operand1 - $operand2;
         }
-        elsif ($op =~ /[*]/)
+        elsif ($op eq '*')
         {
             $result = $operand1 * $operand2;
         }
-        elsif ($op =~ /\//)
+        elsif ($op eq '/')
         {
             $result = $operand1 / $operand2;
         }
@@ -202,6 +202,9 @@ sub evalRPN
 
 #print evalRPN(toRpn("(2+3) *4"));
 
-print evalRPN(toRpn($ARGV[0])), "\n";
+if ($#ARGV > 0)
+{
+	print evalRPN(toRpn($ARGV[0])), "\n";
+}
 
-#1;
+1;

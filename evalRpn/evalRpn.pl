@@ -202,7 +202,7 @@ sub evalRPN
 
 #print evalRPN(toRpn("(2+3) *4"));
 
-if ($#ARGV > 0)
+if ($#ARGV > -1)
 {
 	print evalRPN(toRpn($ARGV[0])), "\n";
 }

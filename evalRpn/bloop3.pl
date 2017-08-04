@@ -1,0 +1,3 @@
+@files = </etc/*>;
+
+print $files;

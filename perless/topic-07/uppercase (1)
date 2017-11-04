@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+my $e = shift(@ARGV);
+my $s = join(' ', @ARGV);
+
+$s =~ s/(\w*$e\w*)/uc $1/ge;
+
+say($s);

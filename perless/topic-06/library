@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dump 'pp';
+use feature 'say';
+
+sub isbn_catalog {
+    my $db = shift();
+    my %m;
+    
+    foreach my $r (@$db) {
+        my $year = $r->[0];
+        my $isbn = $r->[1];
+        my $title = $r->[2];
+        my @authors;
+        
+        for(my $i = 3; $i < scalar(@$r); $i++){
+          push @authors, $r->[$i];
+        }
+        
+        $m{$isbn} = {
+            authors => \@authors,
+            publication_year => $year,
+            title => $title
+        };
+    }
+    
+    return \%m;
+}
+
+my $rh_catalog = isbn_catalog([
+    ['1998', '978-0-8001-0215-9', 'Glory', 'Freddie Fields', 'P.K. Fields', 'Pieter Jan Brugge'],
+    ['1998', '978-0-8001-2901-9','The Whole Town\'s Talking', 'Joseph H. August','John Ford']
+])
+;
+
+say pp($rh_catalog);
+

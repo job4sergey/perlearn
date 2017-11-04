@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+use Teach::Tutor;
+
+my %person = (
+    'Action'  => 'Says',
+    'Height'  => '190cm',
+    'Name'    => 'Simon',
+    'Subject' => 'Wash your hands!',
+    'Weight'  => '75kg'
+);
+
+my $key = $ARGV[0];
+say $person{$key};
+
+delete $person{$key};
+
+submit (%person);
+

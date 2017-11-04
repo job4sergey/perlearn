@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+use Data::Dump 'pp';
+use Teach::Tutor; # Don't forget to call: submit(<variable>);
+
+my $e = shift();
+my @words = @ARGV;
+
+my @res = grep { !/$e/ } @words;
+say(pp(@res));
+submit(@res);

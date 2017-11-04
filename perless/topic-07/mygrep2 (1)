@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+my ($e, $fname) = @ARGV;
+
+open (my $fh,  '<', $fname);
+
+while(my $s = <$fh>) {
+    next unless $s =~ /$e/;
+    print($s =~ s/(\w*)($e)(\w*)/$1.(uc $2).$3/ger);
+}
+
+close($fh);

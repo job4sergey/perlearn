@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dump 'pp';
+use feature 'say';
+
+sub translate {
+	my ( $dict, $words ) = @_;
+	my @t = map { 
+		exists( $dict->{$_} ) ? $dict->{$_} : $_;
+	} @$words;
+	\@t;
+}
+
+my $ra_en_de_xlat = translate(
+	{
+		ich => 'I',
+		bin => 'am',
+		ein => 'a',
+	},
+	[@ARGV]
+);
+
+say join( ' ', @$ra_en_de_xlat );

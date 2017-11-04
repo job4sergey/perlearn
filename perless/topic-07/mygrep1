@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+my ($e, $fname) = @ARGV;
+
+open (my $fh,  '<', $fname);
+
+while(my $line = <$fh>) {
+    if ($line =~ /$e/) {
+        say($line);
+    }
+}
+
+close($fh);

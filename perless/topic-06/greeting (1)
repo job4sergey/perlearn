@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dump 'pp';
+use feature 'say';
+
+sub greet_friend {
+	my $r_f = {
+		age     => 5,
+		reading => 'Encyclopedia Britannica',
+		@_
+	};
+	
+	unless(defined($r_f->{name})){
+		return undef;
+	}
+	
+	my $name = $r_f->{name};
+	my $age = $r_f->{age} + 1;
+	my $reading = $r_f->{reading};
+	
+	my $s = qq(Hi $name! I'm $age and I read $reading ages ago. Totally boring.);
+	
+	delete $r_f->{name};
+	delete $r_f->{age};
+	delete $r_f->{reading};
+	
+	my $added = 0;
+	
+	foreach my $k (keys(%$r_f)) {
+	    unless($added) {
+	        $added = 1;
+	        $s .= " But I like ";
+	    }
+	    else {
+	        $s .= " and ";
+	    }
+	    
+	    $s .= qq($r_f->{$k} as a $k);
+	}
+
+	return $s.".";
+}
+ 
+say greet_friend(
+	name    => 'Daniela',
+	age     => 16,
+	reading => 'Shakespeare',
+	hobby   => 'Pac Man',
+	diet    => 'Vegan',
+);

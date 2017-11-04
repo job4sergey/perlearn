@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dump 'pp';
+use feature 'say';
+
+sub get_max_value_key {
+  my %hash_args = @_;
+  my $max;
+  my $maxK;
+  foreach my $k (keys(%hash_args)) {
+      my $v = $hash_args{$k};
+      unless(defined($max)) {
+          $max = $v;
+          $maxK = $k;
+      }
+      elsif ($max < $v){
+          $max = $v;
+          $maxK = $k;
+      }
+  }
+  $maxK;
+}
+
+my %exam_marks = (anna => 85, bob => 96, chloe => 78, dave => 64);
+
+say 'Highest mark awarded to '.get_max_value_key(%exam_marks);
+

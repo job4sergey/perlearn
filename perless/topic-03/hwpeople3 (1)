@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+use Data::Dump 'pp';
+use Teach::Tutor; # Don't forget to call: submit(<variable>);
+
+my $cnt = scalar(@ARGV);
+
+my $out="";
+if ($cnt == 0) {
+	$out = "Hello, World!\n";
+	say($out);
+}
+else {
+	foreach my $e (@ARGV){
+		my $line = "Hello, $e!";
+		$out = $out.$line;
+		say($line);
+		$out = $out . "\n";
+	}
+}
+
+submit($out);

@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+unless(scalar(@ARGV)) 
+{
+    die('One or more args!');
+}
+
+foreach my $arg (@ARGV)
+{
+    if (exists($ENV{$arg}))
+    {
+        say($ENV{$arg});
+    }
+}

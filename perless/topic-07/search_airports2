@@ -1,0 +1,91 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dump 'pp';
+use feature 'say';
+use Getopt::Long;
+use Text::CSV;
+
+my $filename   = "iata_airports.csv";
+my $number = 1;
+my $matching;
+my $word = 0;
+my $latitude;
+my $longitude;
+
+GetOptions ( "filename=s"   => \$filename,
+			"number=i" => \$number,           
+            "matching=s"  => \$matching,
+            "word" => \$word,
+            "latitude=f"  => \$latitude,
+            "longitude=f"  => \$longitude
+            ) 
+or die("Error in command line arguments\n");
+
+sub parse_airports {
+	my $filename = shift;
+	my @airports;
+	
+	open (my $fh_in, "<:encoding(utf8)", $filename) or die "Error opening input file: $!";
+	
+	my $csv = Text::CSV->new( { binary => 1, eol => $/ } );
+	my $ra_colnames = $csv->getline( $fh_in );
+	$csv->column_names(@$ra_colnames);
+	
+	my $cnt = 0;
+	
+	while (my $rh_line = $csv->getline_hr($fh_in) ) {
+		push @airports, $rh_line;
+		$cnt++;
+	}
+	
+	return \@airports;
+}
+
+sub get_name_matching_airports {
+	my %params = (
+		@_
+	);
+	
+	my $is_whole_word = $params{word};
+	my $expr = $params{matching_string};
+	my $airports = $params{airports};
+	
+	my @airports_found = grep {
+		my $name = $_->{name};
+		my $res;
+		if ($is_whole_word) {
+			$res = $name =~ /^$expr\$/i;
+		}
+		else {
+			$res = $name =~ /$expr/i;
+		}
+		$res;
+	} @{$airports};
+	
+	return \@airports_found;
+}
+
+#my $ap = get_name_matching_airports("airports", [ { name => "Sydney Bankstown" }, { name => "Sydney Kingsford-Smith" }, { name => "Sydney Douglas McCurdy" }, { name => "London Gatwick" }, { name => "Berlin Tempelhof" }, ], "matching_string", "Syd", "word", 0);
+#say(pp(@{$ap}));
+
+my $airports = parse_airports($filename);
+my $airports_found = [];
+
+if ($matching) {
+  say "Up to $number airports matching $matching in $filename:"; 
+  $airports_found = get_name_matching_airports(
+    airports        => $airports,
+    matching_string => $matching,
+    word            => $word,
+  );
+}
+elsif ($latitude && $longitude) {
+  say "Up to $number airports near [$latitude, $longitude] in $filename:"
+}
+else {
+  say "Must have at least --matching, or --latitude and --longitude as arguments";
+}
+
+print pp($airports_found);

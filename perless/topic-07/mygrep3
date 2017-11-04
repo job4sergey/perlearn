@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+my ($e, $fname) = @ARGV;
+
+open (my $fh,  '<', $fname);
+
+while(my $s = <$fh>) {
+	my @words = split /\s+/, $s;
+	my @words_processed = map {$_ =~ /$e/? uc($_) : $_} @words;
+	print (join(' ', @words_processed));
+}
+
+close($fh);

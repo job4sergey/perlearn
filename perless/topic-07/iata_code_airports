@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dump 'pp';
+use Text::CSV;
+use feature 'say';
+
+my ($infile, $outfile) = @ARGV;
+
+my $csv = Text::CSV->new( { binary => 1, eol => $/ } );
+
+open (my $fh_in, "<:encoding(utf8)", $infile) or die "Error opening input file: $!";
+open (my $fh_out, ">:encoding(utf8)", $outfile) or die "Error opening output file: $!";
+
+my $ra_colnames = $csv->getline( $fh_in );
+$csv->print($fh_out, $ra_colnames);	
+my $iata_code_idx;
+for(my $i = 0; $i < scalar(@$ra_colnames); $i++) {
+	if ($ra_colnames->[$i] eq 'iata_code') {
+		$iata_code_idx = $i;
+		last;
+	}
+}
+
+while(my $ra_line = $csv->getline($fh_in)) {
+	if ($ra_line->[$iata_code_idx]) {
+		$csv->print($fh_out, $ra_line);	
+	}
+}
+
+
+close ($fh_in);
+close ($fh_out);
+

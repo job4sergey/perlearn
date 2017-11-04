@@ -1,0 +1,55 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+use feature 'switch';
+use Data::Dump 'pp';
+use Teach::Tutor; # Don't forget to call: submit(<variable>);
+
+#I'm lonely! if there are no arguments
+#Would you like some tea? if there's one argument
+#Hello you two! if there are exactly two arguments
+#Come on in! if there are 3, 4 or 5 arguments
+#Sorry, you must have the wrong address. if there are more than 5 arguments
+
+#my $cnt = scalar(@ARGV);
+#
+#my $out;
+#if ($cnt == 0) {
+#	my $out;
+#}
+#elsif ($cnt == 1) {
+#	$out = "Would you like some tea?";
+#}
+#elsif ($cnt == 2) {
+#	$out = "Hello you two!";
+#}
+#elsif ($cnt >= 3 && $cnt <= 5) {
+#	$out = "Come on in!";
+#}
+#else {
+#	$out = "Sorry, you must have the wrong address.";
+#}
+
+my $out;
+given (my $cnt = scalar(@ARGV)) {
+    when ($cnt == 0) {
+    		$out = "I'm lonely!";
+    }
+    when ($cnt == 1) {
+    		$out = "Would you like some tea?";
+    }
+    when ($cnt == 2) {
+    		$out = "Hello you two!";
+    }
+    when ($cnt >= 3 && $cnt <= 5) {
+    		$out = "Come on in!";
+    }
+    default {
+    		$out = "Sorry, you must have the wrong address.";
+    }
+}
+ 
+say pp $out;
+submit($out);

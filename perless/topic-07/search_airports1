@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dump 'pp';
+use feature 'say';
+use Getopt::Long;
+
+my $filename   = "iata_airports.csv";
+my $number = 1;
+my $matching;
+my $word = 0;
+my $latitude;
+my $longitude;
+
+GetOptions ( "filename=s"   => \$filename,
+			"number=i" => \$number,           
+            "matching=s"  => \$matching,
+            "word" => \$word,
+            "latitude=f"  => \$latitude,
+            "longitude=f"  => \$longitude
+            ) 
+or die("Error in command line arguments\n");
+
+if ($matching) {
+  say "Up to $number airports matching $matching in $filename:";
+}
+elsif ($latitude && $longitude) {
+  say "Up to $number airports near [$latitude, $longitude] in $filename:"
+}
+else {
+  say "Must have at least --matching, or --latitude and --longitude as arguments";
+}

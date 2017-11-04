@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use feature 'say';
+
+my ($e1, $e2, $fname) = @ARGV;
+
+open (my $fh,  '<', $fname);
+
+
+while(my $s = <$fh>) {
+	print($s =~ s/($e1.*$e2)/\U$1\E/gr);
+}
+
+close($fh);
